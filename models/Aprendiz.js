@@ -1,78 +1,28 @@
 const mongoose = require('mongoose');
 
 const aprendizSchema = new mongoose.Schema({
-  ficha: { type: Number, required: true },
-  sede: { type: String, required: true },
-  jornada: { type: String, required: true },
-  Numero_De_Documento: {
-    type: String,
-    required: true,
-    unique: true
-},
-  nombre: { type: String, required: true },
-  apellidos: { type: String, required: true },
-  celular: { type: Number, required: true },
-  correoElectronico: { type: String, required: true },
-  relacionInterpersonal: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  socializacionResultados: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  estrategiasParticipativas: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  orientacionFormacion: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  incentivoPlataforma: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  orientacionGuias: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  puntualidadSesiones: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  dominioTecnico: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  fuentesConsulta: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  apoyoFPI: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  asesoriaPlanes: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  },
-  mejoramientoActitudinal: { 
-    type: String, 
-    enum: ['Muy Satisfecho', 'Satisfecho', 'Neutro', 'Insatisfecho', 'Muy Insatisfecho'], 
-    required: true 
-  }
+  Ficha: { type: Number, required: true },
+  Sede: { type: String, required: true },
+  Jornada: { type: String, required: true },
+  Número_de_Documento: { type: Number, required: true, unique: true },
+  Nombre: { type: String, required: true },
+  Apellidos: { type: String, required: true },
+  Celular: { type: Number, required: true },
+  Correo_Electrónico: { type: String, required: true },
+  "El Instructor establece relaciones interpersonales cordiales, armoniosas, respetuosas": { type: String, default: "Neutro" },
+  "El Instructor socializa, desarrolla y evalúa la totalidad de los resultados de aprendizaje programados para el semestre": { type: String, default: "Neutro" },
+  "El instructor aplica estrategias participativas de trabajo en equipo que le permiten estar activo permanentemente en su proceso de aprendizaje": { type: String, default: "Neutro" },
+  "El Instructor le orienta su formación mediante un proyecto formativo": { type: String, default: "Neutro" },
+  "El Instructor incentiva al aprendiz a utilizar la plataforma Territorium en el desarrollo de las actividades de aprendizaje": { type: String, default: "Neutro" },
+  "El instructor orienta la formación por medio de guías teniendo en cuenta el proyecto formativo": { type: String, default: "Neutro" },
+  "El Instructor es puntual al iniciar las sesiones": { type: String, default: "Neutro" },
+  "El Instructor demuestra dominio técnico": { type: String, default: "Neutro" },
+  "El Instructor le propone fuentes de consulta (bibliografía, webgrafía…) y ayudas que facilitan su proceso de aprendizaje": { type: String, default: "Neutro" },
+  "El instructor brinda apoyo sobre temáticas del FPI cuando el aprendiz lo requiere y es comprensivo frente a dificultades personales direccionando al área competente": { type: String, default: "Neutro" },
+  "El Instructor revisa y asesora los planes de mejoramiento": { type: String, default: "Neutro" },
+  "El instructor, contribuye al mejoramiento actitudinal del aprendiz en su proceso de formación o El instructor contribuye al mejoramiento del aprendiz en su proceso de formación": { type: String, default: "Neutro" }
 });
 
-module.exports = mongoose.model('Aprendiz', aprendizSchema);
+const Aprendiz = mongoose.model('Aprendiz', aprendizSchema);
+
+module.exports = Aprendiz;
