@@ -23,9 +23,11 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 
 // Importar rutas
 const aprendizRoutes = require('./routes/aprendizRoutes');
+const instructorRoutes = require('./routes/instructorRoutes'); // Asegúrate de este path
 
 // Usar las rutas
 app.use('/api/aprendices', aprendizRoutes);
+app.use('/api/instructor', instructorRoutes); // Asegúrate de usar el path correcto y que no haya errores tipográficos
 
 // Iniciar el servidor
 app.listen(port, () => {

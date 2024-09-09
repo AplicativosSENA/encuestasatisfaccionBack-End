@@ -2,12 +2,11 @@
 const mongoose = require('mongoose');
 
 const InstructorSchema = new mongoose.Schema({
-  nombre: { type: String, required: true },
-  apellidos: { type: String, required: true },
-  area: { type: String },
-  correoElectronico: { type: String, required: true },
-  numeroDocumento: { type: Number, required: true, unique: true },
-  celular: { type: Number },
+  Programa: { type: String, required: true },
+  Ficha: { type: Number, required: true }, // Cambia a Number si tus datos son numéricos
+  'Nom Instructor': { type: String, required: true },
 });
 
-module.exports = mongoose.model('Instructor', InstructorSchema);
+const Instructor = mongoose.model('Instructor', InstructorSchema);
+
+module.exports = Instructor;
