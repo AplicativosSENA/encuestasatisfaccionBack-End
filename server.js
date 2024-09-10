@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors'); // Importa el middleware cors
 require('dotenv').config();
 
+const RespuestaController = require('./controllers/RespuestaController');
+
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -24,10 +26,12 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 // Importar rutas
 const aprendizRoutes = require('./routes/aprendizRoutes');
 const instructorRoutes = require('./routes/instructorRoutes'); // Asegúrate de este path
+const RespuestasRoutes = require('./routes/RespuestasRoutes'); // Asegúrate de este path
 
 // Usar las rutas
 app.use('/api/aprendices', aprendizRoutes);
 app.use('/api/instructor', instructorRoutes); // Asegúrate de usar el path correcto y que no haya errores tipográficos
+app.use('/api/respuestas', RespuestasRoutes); // Asegúrate de usar el path correcto y que no haya errores tipográficos
 
 // Iniciar el servidor
 app.listen(port, () => {
