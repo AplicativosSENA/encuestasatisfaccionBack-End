@@ -20,7 +20,7 @@ router.get('/instructor', async (req, res) => {
 // Endpoint para obtener todas las fichas del instructor seleccionado por su nombre
 router.get('/instructor/ficha/:nombre', async (req, res) => {
   try {
-    const { nombre } = req.params;
+    const { nombre } = req.params; // Obtener el nombre del instructor del parámetro de la URL
     const fichas = await Instructor.find({ 'Nom Instructor': nombre }).select('Ficha').exec();
 
     if (!fichas.length) {
@@ -35,6 +35,7 @@ router.get('/instructor/ficha/:nombre', async (req, res) => {
     res.status(500).json({ message: 'Error al obtener las fichas del instructor', error });
   }
 });
+
 
 // Ruta para iniciar sesión
 router.post('/login', async (req, res) => {

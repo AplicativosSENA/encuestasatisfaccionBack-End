@@ -11,25 +11,38 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Error al obtener las respuestas', error });
   }
 });
-
-// Obtener respuestas por ficha
+ 
 router.get('/respuestas/:ficha', async (req, res) => {
   try {
-    const ficha = parseInt(req.params.ficha, 10); // Convertir el parámetro a número entero
+    const ficha = parseInt(req.params.ficha, 10); // Convertimos ficha a número
+    const { instructor } = req.query; // Captura 'Nom Instructor' de los query params
+
+    // Verifica que ficha sea un número válido
     if (isNaN(ficha)) {
-      return res.status(400).json({ message: 'Ficha debe ser un número' });
+      return res.status(400).json({ message: 'El parámetro ficha debe ser un número' });
     }
-    
-    const respuestas = await Respuesta.find({ Ficha: ficha });
-    if (respuestas.length === 0) {
-      return res.status(404).json({ message: 'No se encontraron respuestas' });
+
+    // Imprime los valores de ficha e instructor para depuración
+    console.log('Ficha:', ficha);
+    console.log('Instructor:', instructor);
+
+    // Busca en el campo 'Ficha' y 'Nom Instructor'
+    const respuestas = await Respuesta.find({
+      Ficha: ficha,
+      'Nom Instructor': instructor
+    });
+
+    if (!respuestas || respuestas.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron respuestas para la ficha e instructor seleccionados' });
     }
+
     res.json(respuestas);
   } catch (error) {
-    console.error('Error al obtener respuestas:', error);
-    res.status(500).json({ message: 'Error al obtener respuestas', error });
+    console.error('Error al obtener las respuestas:', error);
+    res.status(500).json({ message: 'Error al obtener las respuestas', error });
   }
 });
+
 
 // Obtener una respuesta por ID
 router.get('/:id', async (req, res) => {

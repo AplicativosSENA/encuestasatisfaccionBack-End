@@ -23,6 +23,19 @@ exports.saveRespuestas = async (req, res) => {
   });
 
   try {
+    // Verificar si el aprendiz ya calificó a este instructor
+    const calificacionExistente = await Respuesta.findOne({
+      Nombre,
+      Apellidos,
+      'Nom Instructor': nomInstructor
+    });
+
+    // Si ya existe una calificación para este aprendiz e instructor, devolver un error
+    if (calificacionExistente) {
+      return res.status(400).json({ message: 'Este aprendiz ya ha calificado a este instructor.' });
+    }
+
+    // Si no existe, guardar la nueva respuesta
     const nuevaRespuesta = new Respuesta(respuestas);
     await nuevaRespuesta.save();
     res.status(201).json({ message: 'Respuestas guardadas exitosamente' });

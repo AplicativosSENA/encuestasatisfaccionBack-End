@@ -13,6 +13,27 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Obtener todos los instructores sin repetir el nombre (Nom Instructor)
+router.get('/unicos', async (req, res) => {
+  try {
+    // Agrupamos por el nombre del instructor (Nom Instructor) para evitar duplicados
+    const instructoresUnicos = await Instructor.aggregate([
+      {
+        $group: {
+          _id: '$Nom Instructor',  // Agrupa por el nombre del instructor
+          instructor: { $first: '$$ROOT' }  // Selecciona el primer documento completo para cada grupo
+        }
+      }
+    ]);
+
+    // Mapeamos el resultado para devolver solo los datos del instructor
+    res.status(200).json(instructoresUnicos.map((i) => i.instructor));
+  } catch (error) {
+    console.error('Error al obtener instructores únicos:', error);
+    res.status(500).json({ message: 'Error al obtener instructores únicos', error: error.message });
+  }
+});
+
 // routes/instructorRoutes.js
 router.get('/ficha/:ficha', async (req, res) => {
   const { ficha } = req.params;
