@@ -27,7 +27,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
     res.send('API funcionando correctamente');
   });
 
-  
+
 // Importar rutas
 const aprendizRoutes = require('./routes/aprendizRoutes');
 const instructorRoutes = require('./routes/instructorRoutes'); // Asegúrate de este path
@@ -36,9 +36,9 @@ const AdministrativoRoutes = require('./routes/AdministrativoRoutes'); // Asegú
 
 // Usar las rutas
 app.use('/api/aprendices', aprendizRoutes);
-app.use('/api/instructor', instructorRoutes); // Asegúrate de usar el path correcto y que no haya errores tipográficos
-app.use('/api/respuestas', RespuestasRoutes); // Asegúrate de usar el path correcto y que no haya errores tipográficos
-app.use('/api/administrativo', AdministrativoRoutes); // Asegúrate de usar el path correcto y que no haya errores tipográficos
+app.use('/api/instructor', instructorRoutes);
+app.use('/api/respuestas', RespuestasRoutes);
+app.use('/api/administrativo', AdministrativoRoutes);
 
 // Iniciar el servidor
 app.listen(port, () => {
