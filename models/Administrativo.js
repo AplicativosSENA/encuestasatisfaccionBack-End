@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const AdministrativoSchema = new mongoose.Schema({
   nombre: { type: String, required: true },
