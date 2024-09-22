@@ -11,9 +11,9 @@ const port = process.env.PORT || 5000;
 // Middleware para analizar JSON
 app.use(express.json());
 
-// Configuración de CORS para permitir solicitudes desde el frontend
+// Configuración de CORS para permitir solicitudes solo desde Netlify
 app.use(cors({
-  origin: 'http://localhost:3000', // Permite solicitudes desde tu frontend en el puerto 3000
+  origin: 'https://main--magical-gumption-afc4f8.netlify.app', // Permitir solo Netlify
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
   allowedHeaders: ['Content-Type', 'Authorization'], // Cabeceras permitidas
 }));
@@ -23,16 +23,16 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .then(() => console.log('Conectado a MongoDB'))
   .catch((error) => console.error('Error al conectar a MongoDB:', error));
 
-  app.get('/', (req, res) => {
-    res.send('API funcionando correctamente');
-  });
-
+// Ruta principal
+app.get('/', (req, res) => {
+  res.send('API funcionando correctamente');
+});
 
 // Importar rutas
 const aprendizRoutes = require('./routes/aprendizRoutes');
-const instructorRoutes = require('./routes/instructorRoutes'); // Asegúrate de este path
-const RespuestasRoutes = require('./routes/RespuestasRoutes'); // Asegúrate de este path
-const AdministrativoRoutes = require('./routes/AdministrativoRoutes'); // Asegúrate de este path
+const instructorRoutes = require('./routes/instructorRoutes');
+const RespuestasRoutes = require('./routes/RespuestasRoutes');
+const AdministrativoRoutes = require('./routes/AdministrativoRoutes');
 
 // Usar las rutas
 app.use('/api/aprendices', aprendizRoutes);
