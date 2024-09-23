@@ -13,10 +13,11 @@ app.use(express.json());
 
 // Configuración de CORS para permitir solicitudes solo desde Netlify
 app.use(cors({
-  origin: 'https://main--magical-gumption-afc4f8.netlify.app', // Permitir solo Netlify
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
-  allowedHeaders: ['Content-Type', 'Authorization'], // Cabeceras permitidas
+  origin: ['http://localhost:3000', 'https://main--magical-gumption-afc4f8.netlify.app', 'https://glistening-marzipan-039e50.netlify.app'], // Añade tu nuevo dominio aquí
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
+
 
 // Conexión a MongoDB
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
