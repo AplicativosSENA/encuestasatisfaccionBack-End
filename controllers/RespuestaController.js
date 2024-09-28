@@ -1,14 +1,15 @@
 const Respuesta = require('../models/Respuesta');
 
 exports.saveRespuestas = async (req, res) => {
-  const { Ficha, Nombre, Apellidos, 'Nom Instructor': nomInstructor, Responses } = req.body;
+  const { Ficha, Nombre, Apellidos, 'Nom Instructor': nomInstructor, Responses, Feedback } = req.body;
 
   // Crear un objeto con los campos del esquema
   const respuestas = {
     Ficha,
     Nombre,
     Apellidos,
-    'Nom Instructor': nomInstructor
+    'Nom Instructor': nomInstructor,
+    Feedback  // Add the feedback field here
   };
 
   // Mapear las respuestas a los campos del esquema
@@ -16,8 +17,7 @@ exports.saveRespuestas = async (req, res) => {
     const pregunta = respuesta.question;
     const respuestaValue = respuesta.response;
 
-    // Asegurarse de que la pregunta exista en el esquema antes de asignar
-    if (respuestas[pregunta]) {
+    if (respuesta[pregunta]) {
       respuestas[pregunta] = respuestaValue;
     }
   });
@@ -30,12 +30,10 @@ exports.saveRespuestas = async (req, res) => {
       'Nom Instructor': nomInstructor
     });
 
-    // Si ya existe una calificación para este aprendiz e instructor, devolver un error
     if (calificacionExistente) {
       return res.status(400).json({ message: 'Este aprendiz ya ha calificado a este instructor.' });
     }
 
-    // Si no existe, guardar la nueva respuesta
     const nuevaRespuesta = new Respuesta(respuestas);
     await nuevaRespuesta.save();
     res.status(201).json({ message: 'Respuestas guardadas exitosamente' });
