@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Configuración de CORS para permitir solicitudes solo desde Netlify
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://main--magical-gumption-afc4f8.netlify.app', 'https://main--glistening-marzipan-sena.netlify.app/'], // Añade tu nuevo dominio aquí
+  origin: ['http://localhost:3000', 'https://main--magical-gumption-afc4f8.netlify.app', 'https://main--glistening-marzipan-sena.netlify.app'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 }));
