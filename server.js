@@ -39,7 +39,7 @@ const AdministrativoRoutes = require('./routes/AdministrativoRoutes');
 app.use('/api/aprendices', aprendizRoutes);
 app.use('/api/instructor', instructorRoutes);
 app.use('/api/respuestas', RespuestasRoutes);
-app.use('/api/administrativo', AdministrativoRoutes);
+app.use('/api/administrador', AdministrativoRoutes);
 
 // Iniciar el servidor
 app.listen(port, () => {

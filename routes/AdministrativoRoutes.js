@@ -17,6 +17,31 @@ router.get('/instructor', async (req, res) => {
   }
 });
 
+// Ruta para registrar un nuevo administrativo
+router.post('/', async (req, res) => {
+  const { nombre, correo, contraseña, coordinacion } = req.body;
+
+  try {
+    // Crear nuevo administrativo
+    const nuevoAdministrativo = new Administrativo({
+      nombre,
+      correo,
+      contraseña, // Esto se encriptará antes de guardarse gracias al pre-save hook
+      coordinacion
+    });
+
+    // Guardar en la base de datos
+    await nuevoAdministrativo.save();
+    res.status(201).json({ message: 'Administrativo creado exitosamente' });
+  } catch (error) {
+    if (error.code === 11000) {
+      res.status(400).json({ message: 'El correo ya está registrado' });
+    } else {
+      res.status(500).json({ message: 'Error al crear el administrativo', error });
+    }
+  }
+});
+
 // Endpoint para obtener todas las fichas del instructor seleccionado por su nombre
 router.get('/instructor/ficha/:nombre', async (req, res) => {
   try {
@@ -54,15 +79,31 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ message: 'Contraseña incorrecta' });
     }
 
-    // Crear un token JWT
-    const token = jwt.sign({ id: admin._id }, 'Erik12345', { expiresIn: '1h' });
+    // Crear un token JWT que incluya la coordinación
+    const token = jwt.sign({ id: admin._id, coordinacion: admin.coordinacion }, 'Erik12345', { expiresIn: '1h' });
 
-    res.status(200).json({ token });
+    // Imprimir la coordinación en consola para depuración
+    console.log('Coordinación del administrativo:', admin.coordinacion);
+
+    let instructores = [];
+    // Obtener instructores según la coordinación del administrativo
+    if (admin.nombre === "Julio Alejandro Sanabria Vargas") {
+      instructores = await Instructor.find().exec(); // Obtén todos los instructores para Julio
+    } else {
+      instructores = await Instructor.find({ coordinacion: admin.coordinacion }).exec(); // Instructores de su coordinación
+    }
+
+    res.status(200).json({ token, instructores });
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
   }
 });
+
+
+
+
+
 
 // Ruta para actualizar un instructor por ID
 router.put('/instructor/:id', async (req, res) => {
