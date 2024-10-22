@@ -34,12 +34,15 @@ const aprendizRoutes = require('./routes/aprendizRoutes');
 const instructorRoutes = require('./routes/instructorRoutes');
 const RespuestasRoutes = require('./routes/RespuestasRoutes');
 const AdministrativoRoutes = require('./routes/AdministrativoRoutes');
+const CoordinadorRoutes = require('./routes/CoordinadorRoutes');
+
 
 // Usar las rutas
 app.use('/api/aprendices', aprendizRoutes);
 app.use('/api/instructor', instructorRoutes);
 app.use('/api/respuestas', RespuestasRoutes);
 app.use('/api/administrador', AdministrativoRoutes);
+app.use('/api/coordinador', CoordinadorRoutes);
 
 // Iniciar el servidor
 app.listen(port, () => {

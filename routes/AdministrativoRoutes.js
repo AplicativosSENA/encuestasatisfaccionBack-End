@@ -3,11 +3,11 @@ const router = express.Router();
 const Instructor = require('../models/Instructor'); // Ajusta la ruta según tu estructura de archivos
 const Administrativo = require('../models/Administrativo'); // Asegúrate de que esta ruta sea correcta
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs'); // Asegúrate de importar bcryptjs
 
 // Endpoint para obtener instructores únicos por nombre
 router.get('/instructor', async (req, res) => {
   try {
-    // Obtenemos instructores únicos por su nombre
     const instructores = await Administrativo.aggregate([
       { $group: { _id: '$Nom Instructor', instructor: { $first: '$$ROOT' } } },
     ]).exec();
@@ -42,24 +42,38 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Endpoint para obtener todas las fichas del instructor seleccionado por su nombre
-router.get('/instructor/ficha/:nombre', async (req, res) => {
-  try {
-    const { nombre } = req.params; // Obtener el nombre del instructor del parámetro de la URL
-    const fichas = await Instructor.find({ 'Nom Instructor': nombre }).select('Ficha').exec();
 
-    if (!fichas.length) {
-      return res.status(404).json({ message: 'No se encontraron fichas para este instructor' });
+
+
+// Ruta para obtener todas las fichas de instructores seleccionados por su nombre
+router.get('/ficha/:nombre', async (req, res) => {
+  try {
+    const { nombre } = req.params;
+
+    // Buscar todos los instructores que coincidan con el nombre
+    const instructores = await Instructor.find({ 'Nom Instructor': nombre });
+    
+    if (!instructores.length) {
+      return res.status(404).json({ message: 'No se encontraron instructores con ese nombre' });
     }
 
-    // Extraer las fichas y devolverlas como un array
-    const fichaArray = fichas.map((item) => item.Ficha);
-    res.json({ fichas: fichaArray });
+    // Obtener todas las fichas de todos los instructores encontrados
+    const todasLasFichas = instructores.flatMap(instructor => instructor.Ficha);
+
+    // Devolver las fichas como un array
+    res.json({ nombre: nombre, fichas: todasLasFichas });
   } catch (error) {
-    console.error('Error al obtener las fichas del instructor:', error);
-    res.status(500).json({ message: 'Error al obtener las fichas del instructor', error });
+    console.error('Error al obtener las fichas de los instructores:', error);
+    res.status(500).json({ message: 'Error al obtener las fichas de los instructores', error });
   }
 });
+
+
+
+
+
+
+
 
 
 // Ruta para iniciar sesión
@@ -67,40 +81,32 @@ router.post('/login', async (req, res) => {
   const { correo, contraseña } = req.body;
 
   try {
-    // Buscar al administrativo por el correo
-    const admin = await Administrativo.findOne({ correo });
-    if (!admin) {
-      return res.status(404).json({ message: 'Administrador no encontrado' });
+    // Buscar al usuario en tu base de datos
+    const usuario = await Administrativo.findOne({ correo });
+
+    if (!usuario) {
+      return res.status(400).json({ mensaje: 'Usuario no encontrado' });
     }
 
-    // Comparar la contraseña
-    const match = await admin.compararContraseña(contraseña);
-    if (!match) {
-      return res.status(401).json({ message: 'Contraseña incorrecta' });
+    // Verifica la contraseña usando bcryptjs
+    const esValido = await usuario.compararContraseña(contraseña); // Usa el método definido en el modelo
+    if (!esValido) {
+      return res.status(400).json({ mensaje: 'Contraseña incorrecta' });
     }
 
-    // Crear un token JWT que incluya la coordinación
-    const token = jwt.sign({ id: admin._id, coordinacion: admin.coordinacion }, 'Erik12345', { expiresIn: '1h' });
-
-    // Imprimir la coordinación en consola para depuración
-    console.log('Coordinación del administrativo:', admin.coordinacion);
-
-    let instructores = [];
-    // Obtener instructores según la coordinación del administrativo
-    if (admin.nombre === "Julio Alejandro Sanabria Vargas") {
-      instructores = await Instructor.find().exec(); // Obtén todos los instructores para Julio
+    // Aquí puedes manejar la lógica para redirigir según el usuario
+    if (usuario.nombre === "Julio Alejandro Sanabria Vargas") {
+      // Retorna el token y un campo que indica que es administrativo
+      return res.json({ token: 'token-de-julio', esAdministrativo: true });
     } else {
-      instructores = await Instructor.find({ coordinacion: admin.coordinacion }).exec(); // Instructores de su coordinación
+      // Retorna el token y un campo que indica que es coordinación
+      return res.json({ token: 'token-de-otro', esAdministrativo: false });
     }
-
-    res.status(200).json({ token, instructores });
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
-    res.status(500).json({ message: 'Error al iniciar sesión', error: error.message });
+    res.status(500).json({ mensaje: 'Error al iniciar sesión', error: error.message });
   }
 });
-
-
 
 
 
