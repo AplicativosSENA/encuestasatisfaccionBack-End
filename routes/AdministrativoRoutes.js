@@ -81,7 +81,7 @@ router.post('/login', async (req, res) => {
   const { correo, contraseña } = req.body;
 
   try {
-    // Buscar al usuario en tu base de datos
+    // Buscar al usuario en la base de datos
     const usuario = await Administrativo.findOne({ correo });
 
     if (!usuario) {
@@ -89,24 +89,36 @@ router.post('/login', async (req, res) => {
     }
 
     // Verifica la contraseña usando bcryptjs
-    const esValido = await usuario.compararContraseña(contraseña); // Usa el método definido en el modelo
+    const esValido = await usuario.compararContraseña(contraseña);
     if (!esValido) {
       return res.status(400).json({ mensaje: 'Contraseña incorrecta' });
     }
 
-    // Aquí puedes manejar la lógica para redirigir según el usuario
+    // Generar un token personalizado
+    let token;
     if (usuario.nombre === "Julio Alejandro Sanabria Vargas") {
-      // Retorna el token y un campo que indica que es administrativo
-      return res.json({ token: 'token-de-julio', esAdministrativo: true });
+      token = jwt.sign({ id: usuario._id }, 'clave_secreta_julio', { expiresIn: '1h' });
+      return res.json({ token, esAdministrativo: true, coordinacion: usuario.coordinacion });
+    } else if (usuario.coordinacion === "ARTES ESCÉNICAS") {
+      token = jwt.sign({ id: usuario._id }, 'clave_secreta_artes', { expiresIn: '1h' });
+    } else if (usuario.coordinacion === "DEPORTES") {
+      token = jwt.sign({ id: usuario._id }, 'clave_secreta_deportes', { expiresIn: '1h' });
+    } else if (usuario.coordinacion === "MUSICA Y AUDIOVISUALES") {
+      token = jwt.sign({ id: usuario._id }, 'clave_secreta_musica', { expiresIn: '1h' });
     } else {
-      // Retorna el token y un campo que indica que es coordinación
-      return res.json({ token: 'token-de-otro', esAdministrativo: false });
+      // Token genérico para otros coordinadores
+      token = jwt.sign({ id: usuario._id }, 'clave_secreta_generica', { expiresIn: '1h' });
     }
+
+    // Retorna el token y la coordinación del usuario
+    return res.json({ token, esAdministrativo: false, coordinacion: usuario.coordinacion });
+
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     res.status(500).json({ mensaje: 'Error al iniciar sesión', error: error.message });
   }
 });
+
 
 
 
